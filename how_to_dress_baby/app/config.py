@@ -13,6 +13,7 @@ from zoneinfo import ZoneInfo
 class Config:
     demo: bool = True
     location: str = "Chez nous"
+    baby_name: str = ""
     timezone: str = "Europe/Paris"
     day_start: str = "07:00"
     night_start: str = "19:00"
@@ -37,6 +38,12 @@ class Config:
     cache_dir: str = "cache"
 
     def __post_init__(self) -> None:
+        if (
+            not isinstance(self.baby_name, str)
+            or len(self.baby_name) > 40
+            or any(not char.isprintable() for char in self.baby_name)
+        ):
+            raise ValueError("baby_name must be printable text of at most 40 characters")
         ZoneInfo(self.timezone)
         for name in ("day_start", "night_start"):
             if not re.fullmatch(r"(?:[01]\d|2[0-3]):[0-5]\d", getattr(self, name)):

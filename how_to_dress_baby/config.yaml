@@ -1,5 +1,5 @@
 name: "How to dress baby"
-version: "0.3.1"
+version: "0.3.2"
 slug: "how_to_dress_baby"
 description: "Local baby clothing suggestions rendered for a 600 × 800 Kindle"
 url: "https://github.com/somaticbits/how-to-dress-baby"
@@ -19,6 +19,7 @@ webui: "http://[HOST]:[PORT:8000]/display.png"
 options:
   demo: true
   location: Chez nous
+  baby_name: ""
   timezone: Europe/Paris
   day_start: "07:00"
   night_start: "19:00"
@@ -43,6 +44,7 @@ options:
 schema:
   demo: bool
   location: str
+  baby_name: "str?"
   timezone: str
   day_start: str
   night_start: str

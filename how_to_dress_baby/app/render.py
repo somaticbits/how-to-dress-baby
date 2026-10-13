@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from app.artwork import GREY, LABELS, icon, marker
 from app.config import Config
+from app.messages import greeting
 from app.models import Room, Snapshot
 from app.rules import fresh, recommend
 
@@ -217,10 +218,11 @@ class Page:
         self.text(MARGIN, 23, message, 18, bold=True, fill=255)
         return BANNER_HEIGHT + 4
 
-    def header(self, top, period, subtitle, updated) -> int:
+    def header(self, top, period, subtitle, updated, title="Habiller bébé") -> int:
         """Title and context on the left, period and freshness on the right."""
         self.image.paste(marker("star", 26), (MARGIN + 4, top + 22))
-        self.text(MARGIN + 40, top + 46, "Habiller bébé", 32, rounded=True, bold=True)
+        size, lines = self.fit(title, 390, (32, 29, 26, 23, 20, 17), 1, rounded=True)
+        self.text(MARGIN + 40, top + 46, lines[0], size, rounded=True)
         self.text(MARGIN + 4, top + 72, subtitle, 16, fill=51)
         self.text(WIDTH - MARGIN - 4, top + 44, period, 20, rounded=True, anchor="rs")
         self.text(WIDTH - MARGIN - 4, top + 72, updated, 14, fill=74, anchor="rs")
@@ -301,6 +303,7 @@ def render_day(snapshot: Snapshot, config: Config, now: datetime) -> bytes:
         "Journée",
         f"{config.location[:28]} · {long_date(now.astimezone(zone))}",
         updated_at(snapshot.fetched_at, now, zone),
+        greeting(config, now, "day"),
     )
 
     # Outdoors: the recommendation leads; its temperature sits right beside it.
@@ -428,6 +431,7 @@ def render_night(snapshot: Snapshot, config: Config, now: datetime) -> bytes:
         "Nuit",
         night_dates(evening, evening + timedelta(days=1)),
         updated_at(observed, now, zone),
+        greeting(config, now, "night"),
     )
 
     left, right = MARGIN, WIDTH - MARGIN

@@ -125,6 +125,7 @@ class Display:
                     {
                         "date": now.astimezone(ZoneInfo(self.config.timezone)).date().isoformat(),
                         "page": selected,
+                        "baby_name": self.config.baby_name,
                         "before_day_start": now.astimezone(ZoneInfo(self.config.timezone)).strftime(
                             "%H:%M"
                         )

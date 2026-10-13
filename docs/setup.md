@@ -35,6 +35,15 @@ supplies authentication; no separate token is needed.
 
 ## Adjust the display
 
+Set `baby_name` to your child's first name (up to 40 printable characters) for
+personalised French greetings in the header. Leave it blank to use “bébé”.
+There are 50 built-in messages: 25 for daytime and 25 for bedtime. They rotate
+daily in your configured timezone; a bedtime greeting stays the same across
+midnight until the day starts. No AI or extra Kindle wake-ups are involved.
+Long greetings shrink to fit; very long names may be shortened on screen.
+The name appears in images served on your LAN, so avoid sharing personalised
+screenshots publicly unless you intend to share it.
+
 Defaults are day **07:00–19:00**, timezone **Europe/Paris**, weather refresh every
 **15 minutes**, and reading expiry after **120 minutes**. Set the location label,
 timezone, schedule and freshness limits for your home and sensors.

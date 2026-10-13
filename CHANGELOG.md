@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2
+
+- Add optional `baby_name` configuration and 50 personalised French greetings.
+- Rotate daytime and bedtime greetings daily, keeping bedtime stable across midnight.
+- Fit greetings to the header and keep names local to the configured display.
+
 ## 0.3.1
 
 - Rebalance both pages: the outdoor outfit leads in one sentence (« A, B et C »),

@@ -26,6 +26,8 @@ by this app.
   missing or too old to use.
 - **Keeps the Kindle display simple:** grayscale illustrations, readable text,
   and a low-battery reminder when battery reporting is configured.
+- **Adds a personal touch:** set your baby's name for 50 French greetings that
+  rotate between daytime and bedtime. Leave it blank to use “bébé”.
 
 > **A starting point, not medical advice.** Clothing thresholds are adjustable
 > rules of thumb, not clinically validated cutoffs. Check your baby's comfort
