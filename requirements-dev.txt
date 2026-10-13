@@ -1,0 +1,2 @@
+-r how_to_dress_baby/requirements.txt
+ruff==0.12.12

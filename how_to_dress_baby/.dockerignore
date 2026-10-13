@@ -1,0 +1,9 @@
+.git
+.venv
+cache
+downloads
+tests
+docs
+*.bin
+*.tar.xz
+**/__pycache__

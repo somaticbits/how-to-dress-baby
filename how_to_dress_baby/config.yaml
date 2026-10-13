@@ -1,0 +1,66 @@
+name: "How to dress baby"
+version: "0.3.0"
+slug: "how_to_dress_baby"
+description: "Local baby clothing suggestions rendered for a 600 × 800 Kindle"
+url: "https://github.com/somaticbits/how-to-dress-baby"
+arch:
+  - aarch64
+  - amd64
+  - armv7
+startup: application
+boot: auto
+init: false
+homeassistant_api: true
+ports:
+  8000/tcp: 8000
+ports_description:
+  8000/tcp: "LAN-only Kindle PNG and health endpoint"
+webui: "http://[HOST]:[PORT:8000]/display.png"
+options:
+  demo: true
+  location: Chez nous
+  timezone: Europe/Paris
+  day_start: "07:00"
+  night_start: "19:00"
+  port: 8000
+  refresh_seconds: 900
+  max_age_minutes: 120
+  forecast_hours: 4
+  weather_entity: ""
+  living_room_entity: ""
+  bedroom_entity: ""
+  parents_bedroom_entity: ""
+  alert_entity: ""
+  ha_url: "http://supervisor/core"
+  extreme_cold_below: 0.0
+  cold_below: 10.0
+  cool_below: 18.0
+  mild_below: 22.0
+  warm_from: 25.0
+  indoor_cool_below: 18.0
+  indoor_warm_from: 25.0
+  extreme_heat_from: 32.0
+schema:
+  demo: bool
+  location: str
+  timezone: str
+  day_start: str
+  night_start: str
+  port: "int(8000,8000)"
+  refresh_seconds: "int(60,86400)"
+  max_age_minutes: "int(1,1440)"
+  forecast_hours: "int(1,24)"
+  weather_entity: str
+  living_room_entity: str
+  bedroom_entity: str
+  parents_bedroom_entity: "str?"
+  alert_entity: str
+  ha_url: str
+  extreme_cold_below: float
+  cold_below: float
+  cool_below: float
+  mild_below: "float?"
+  warm_from: float
+  indoor_cool_below: "float?"
+  indoor_warm_from: "float?"
+  extreme_heat_from: float
