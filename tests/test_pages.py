@@ -61,20 +61,20 @@ class PageTests(unittest.TestCase):
     def test_day_has_no_sleep_recommendations(self):
         text = rendered_text(demo_snapshot(NOW), page="day")
         self.assertIn("DÉMONSTRATION — DONNÉES FICTIVES", text)
-        self.assertIn("Le jour", text)
+        self.assertIn("Journée", text)
         self.assertNotIn("gigoteuse", text.lower())
         self.assertNotIn("chambre", text.lower())
         self.assertNotIn("Voiture", text)
         self.assertNotIn("Portage", text)
         self.assertNotIn("poussette", text)
-        self.assertIn("À porter maintenant", text)
-        self.assertIn("Adapter les couches ; éviter la surchauffe.", text)
+        self.assertIn("Body manches longues, pantalon, gilet et chaussettes", text)
+        self.assertIn("Les 4 prochaines heures : 10 à 15°", text)
 
     def test_night_has_no_weather_or_transport(self):
         text = rendered_text(demo_snapshot(NOW))
         self.assertIn("DÉMONSTRATION — CHAMBRE FICTIVE", text)
-        self.assertIn("La nuit", text)
-        self.assertIn("19°C chambre", text)
+        self.assertIn("Nuit", text)
+        self.assertIn("19° chambre", text)
         self.assertNotIn("Pluie", text)
         self.assertNotIn("Voiture", text)
         self.assertIn("choix manuel", text)
@@ -95,10 +95,7 @@ class PageTests(unittest.TestCase):
         snapshot = demo_snapshot(NOW)
         snapshot = replace(snapshot, weather=replace(snapshot.weather, wind_kmh=40))
         text = rendered_text(snapshot, page="day")
-        self.assertIn("veste légère", text)
-        self.assertIn("change sec", text)
-        self.assertIn("coupe-pluie", text)
-        self.assertIn("À ajouter si besoin", text)
+        self.assertIn("Veste légère, change sec et coupe-pluie", text)
         self.assertNotIn("…", text)
 
     def test_night_depends_only_on_bedroom(self):
@@ -113,12 +110,30 @@ class PageTests(unittest.TestCase):
         text = rendered_text(snapshot)
         self.assertIn("TEMPÉRATURE ABSENTE OU PÉRIMÉE", text)
         self.assertIn("À mesurer", text)
-        self.assertNotIn("19°C", text)
+        self.assertNotIn("19°", text)
+
+    def test_night_date_spans_months(self):
+        now = datetime(2026, 10, 31, 22, tzinfo=UTC)
+        text = rendered_text(demo_snapshot(now), now)
+        self.assertIn("Nuit du 31 octobre au 1er novembre", text)
+
+    def test_apparent_temperature_shown_only_when_different(self):
+        snapshot = demo_snapshot(NOW)
+        self.assertIn("ressenti 10°", rendered_text(snapshot, page="day"))
+        same = replace(snapshot, weather=replace(snapshot.weather, apparent_temperature=12.2))
+        self.assertNotIn("ressenti", rendered_text(same, page="day"))
+
+    def test_update_time_moves_to_header_without_footer_tips(self):
+        text = rendered_text(demo_snapshot(NOW), page="day")
+        self.assertIn("Mis à jour à 20 h 00", text)
+        self.assertNotIn("heure de Paris", text)
+        self.assertNotIn("Vérifier la nuque", text)
+        self.assertNotIn("+", text)
 
     def test_night_date_spans_midnight(self):
         now = datetime(2026, 10, 12, 23, tzinfo=UTC)
         text = rendered_text(demo_snapshot(now), now)
-        self.assertIn("Nuit du 12/10 au 13/10/2026", text)
+        self.assertIn("Nuit du 12 au 13 octobre", text)
 
     def test_auto_switch_changes_etag_without_new_weather(self):
         before = NOW.replace(hour=16, minute=59)

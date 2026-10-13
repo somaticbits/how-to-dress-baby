@@ -7,45 +7,47 @@ from PIL import ImageDraw
 
 from app.config import Config
 from app.models import Room
-from app.render import BATTERY_TOP, battery_notice, render
+from app.render import BATTERY_TOP, CONTENT_BOTTOM, battery_notice, render
 from app.weather import demo_snapshot
 
 NOW = datetime(2026, 10, 13, 8, tzinfo=UTC)
 
 
-class FooterLayoutTests(unittest.TestCase):
-    def test_footer_text_has_separate_rows_and_clear_battery_area(self):
+class LayoutTests(unittest.TestCase):
+    def test_text_stays_inside_the_page_and_clear_of_the_battery_band(self):
         sample = replace(demo_snapshot(NOW), parents_bedroom=Room(19.3, NOW))
+        cold = replace(sample, weather=replace(sample.weather, temperature=5))
+        windy = replace(sample, weather=replace(sample.weather, wind_kmh=40))
         boxes = []
         original = ImageDraw.ImageDraw.text
 
         def capture(draw, xy, text, *args, **kwargs):
-            if 694 <= xy[1] < BATTERY_TOP:
-                boxes.append(draw.textbbox(xy, text, font=kwargs["font"]))
+            if not text.startswith("Kindle"):
+                anchor = kwargs.get("anchor")
+                boxes.append(draw.textbbox(xy, text, font=kwargs["font"], anchor=anchor))
             return original(draw, xy, text, *args, **kwargs)
 
         for page in ("day", "night"):
             for snapshot in (
                 sample,
+                cold,
+                windy,
                 replace(sample, demo=False),
                 replace(sample, weather=None, living_room=None, bedroom=None),
             ):
-                for level, charging in ((None, None), (0, False), (15, False), (15, True)):
-                    with self.subTest(
-                        page=page, demo=snapshot.demo, level=level, charging=charging
-                    ):
+                for level, charging in ((None, None), (0, False), (15, True)):
+                    with self.subTest(page=page, demo=snapshot.demo, level=level):
                         boxes.clear()
                         with patch.object(ImageDraw.ImageDraw, "text", new=capture):
                             content = render(snapshot, Config(), NOW, page)
                             battery_notice(content, level, charging)
-                        self.assertEqual(len(boxes), 3 if page == "day" else 2)
+                        self.assertTrue(boxes)
                         for left, top, right, bottom in boxes:
-                            self.assertGreater(top, 694)
                             self.assertGreaterEqual(left, 16)
                             self.assertLessEqual(right, 584)
-                            self.assertLessEqual(bottom + 3, BATTERY_TOP)
-                        for first, second in zip(boxes, boxes[1:], strict=False):
-                            self.assertLessEqual(first[3] + 3, second[1])
+                            self.assertGreaterEqual(top, 0)
+                            self.assertLessEqual(bottom, CONTENT_BOTTOM)
+        self.assertLess(CONTENT_BOTTOM, BATTERY_TOP)
 
 
 if __name__ == "__main__":

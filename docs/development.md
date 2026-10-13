@@ -52,7 +52,7 @@ the process environment. Never commit either. The HA OS app needs no separate to
 
 Original garment illustrations are drawn with Pillow. Typography uses bundled
 Fredoka headings and Atkinson Hyperlegible body text. Layout checks measure real
-font bounds and reserve footer space for the low-battery banner.
+font bounds and keep all content above the low-battery banner.
 
 Battery reporting uses each existing image download; it does not require another
 wake-up. A warning appears at 15% or below unless charging is reported. It reflects

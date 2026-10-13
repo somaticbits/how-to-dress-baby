@@ -19,7 +19,7 @@ by this app.
 ## What it does
 
 - **Suggests what to wear now** from the outdoor air temperature, with extra
-  layers to bring and short rain, wind and sun reminders.
+  layers to bring and current weather beside the outfit.
 - **Shows actual room temperatures**, including separate readings for the baby's
   and parents' bedrooms. Sleep sack and TOG choices stay with you.
 - **Switches between day and night automatically** and warns when readings are
@@ -70,8 +70,8 @@ to the app, so no API token is needed for this installation.
 ## How the suggestions work
 
 The app uses outdoor **air temperature**, not “feels like,” to choose a baseline
-outfit. Wind, rain and UV add preparation advice rather than artificial
-temperature penalties. For example, the default at **16°C** is a long-sleeved
+outfit. Wind and rain inform carried layers rather than artificial temperature
+penalties. For example, the default at **16°C** is a long-sleeved
 body, trousers, socks and a removable lightweight cardigan.
 
 Indoor advice uses room sensors independently. At night, the app never guesses

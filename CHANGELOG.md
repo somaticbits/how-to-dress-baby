@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.1
+
+- Rebalance both pages: the outdoor outfit leads in one sentence (« A, B et C »),
+  with the temperature and conditions in a circle beside it.
+- Move the update time into the header; remove the footer tips.
+- Show the apparent temperature only when it differs from the air temperature.
+- Spell dates in words (« lundi 12 octobre », « Nuit du 12 au 13 octobre »).
+- Centre indoor and carried-layer cards; one carried layer gets a large drawing.
+- Keep every line of text above the low-battery band, checked by tests.
+
 ## 0.3.0
 
 - First public Home Assistant app repository.
