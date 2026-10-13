@@ -1,133 +1,101 @@
 # How to dress baby
 
-A local weather-to-wardrobe display for a jailbroken Kindle, powered by Home
-Assistant. Deterministic Python rules, original garment illustrations, and a
-600 × 800 grayscale image: no runtime AI, cloud rendering, or image subscriptions.
+**A baby clothing guide at a glance, on a Kindle you already own.**
+
+How to dress baby uses Home Assistant weather and room sensors to suggest a
+starting outfit for the day and show bedroom temperatures at night. It turns
+that information into a simple, illustrated display for a jailbroken Kindle.
+
+Runs locally. No runtime AI, cloud rendering service, or subscription required
+by this app.
 
 <p>
-  <img src="images/day.png" width="300" alt="Day page with fictitious weather and a layered outfit" />
-  <img src="images/night.png" width="300" alt="Night page with fictitious bedroom readings and manual sleepwear guidance" />
+  <img src="images/day.png" width="300" alt="Day display: weather, clothes to wear now, and layers to bring" />
+  <img src="images/night.png" width="300" alt="Night display: separate bedroom temperatures and sleepwear reminders" />
 </p>
 
-**The screenshots are demonstrations, not live weather or clothing prescriptions.**
+*Day and night previews use sample data. The display is currently in French.*
 
 ## What it does
 
-- **Day:** a weather-only starting outfit, indoor awake clothing, removable layers
-  to carry, and brief wind/rain/sun advice. Parents adjust for transport and comfort.
-- **Night:** separately labelled baby/parents bedroom readings; gigoteuse and TOG
-  selection stay manual. Outdoor weather is never substituted for room temperature.
-- **Kindle:** `/display.png` switches day/night in the configured timezone;
-  `/day.png` and `/night.png` are available separately. Existing downloads can report
-  battery level for a prominent low-battery reminder, with no additional wake-ups.
-- **Resilience:** persistent cache, explicit stale/missing-data warnings, ETags,
-  bounded HA requests, and packaged fonts for offline rendering.
+- **Suggests what to wear now** from the outdoor air temperature, with extra
+  layers to bring and short rain, wind and sun reminders.
+- **Shows actual room temperatures**, including separate readings for the baby's
+  and parents' bedrooms. Sleep sack and TOG choices stay with you.
+- **Switches between day and night automatically** and warns when readings are
+  missing or too old to use.
+- **Keeps the Kindle display simple:** grayscale illustrations, readable text,
+  and a low-battery reminder when battery reporting is configured.
 
-At **16°C air temperature**, the default outdoor baseline is **long-sleeved body,
-trousers, socks and a removable lightweight cardigan**. Provider “feels like” is
-context, not the outfit selector. Numeric bands are **adjustable comfort heuristics,
-not clinically validated cutoffs**. See [evidence and limitations](docs/clothing-guidance.md).
+> **A starting point, not medical advice.** Clothing thresholds are adjustable
+> rules of thumb, not clinically validated cutoffs. Check your baby's comfort
+> and adapt for transport, coverings and changing conditions. See the
+> [clothing guidance and sources](docs/clothing-guidance.md).
 
-## Install on Home Assistant OS
+## What you need
 
-1. Open **Settings → Apps → App store** (called **Add-ons** on older versions).
+- **Home Assistant OS**, with a weather entity and room temperature sensors.
+- **A compatible jailbroken Kindle** with a screensaver downloader. Tested on a
+  Kindle Basic 8th generation (KT3), firmware 5.12.5, at 600 × 800 pixels. Other
+  devices and firmware need verification.
+- **A trusted local network** connecting Home Assistant and the Kindle.
+
+You can preview the app in demo mode before connecting sensors or a Kindle.
+The app does not jailbreak your device or install its downloader.
+
+## Get started
+
+1. In Home Assistant, open **Settings → Apps → App store**
+   (**Add-ons → Add-on store** on older versions).
 2. Open **⋮ → Repositories** and add:
-   `https://github.com/somaticbits/how-to-dress-baby`
-3. Install **How to dress baby**, start in demo mode, and open its web UI.
-4. Configure your weather entity and room temperature entities, then set
-   `demo: false`. Leave `ha_url: http://supervisor/core` for the add-on.
 
-The Supervisor supplies API authentication; **no token belongs in the configuration**.
-Expose port 8000 only to trusted LAN clients. This app is not Internet-safe.
+   ```text
+   https://github.com/somaticbits/how-to-dress-baby
+   ```
 
-The repository builds the image on your HA host. New versions appear through
-HA’s normal update flow after checking the app store for updates.
+3. Install **How to dress baby**, start it with demo mode enabled, then select
+   **Open Web UI** to see the display.
+4. In the app's configuration, select your weather and room sensor entities,
+   then turn off demo mode. See the [configuration guide](docs/setup.md).
+5. Follow the [Kindle setup guide](docs/kindle.md) and point its downloader to:
 
-### Migrating from a local ZIP installation
+   ```text
+   http://YOUR_HA_LAN_IP:8000/display.png
+   ```
 
-A repository installation may be a **different app instance**. Save your existing
-options, stop the local copy, install this one, and transfer the options. Do not
-run both on port 8000. Verify `/health` and both images before re-enabling Kindle
-downloads. Local caches are not migrated automatically; keep the old installation
-stopped until the replacement is verified rather than deleting it immediately.
+**Keep port 8000 on your trusted LAN.** The image service has no authentication;
+do not expose it to the Internet. Home Assistant supplies its own API credentials
+to the app, so no API token is needed for this installation.
 
-## Configure
+## How the suggestions work
 
-```yaml
-demo: false
-weather_entity: weather.your_home
-living_room_entity: sensor.your_living_room_temperature
-bedroom_entity: sensor.your_baby_room_temperature
-parents_bedroom_entity: sensor.your_other_bedroom_temperature
-alert_entity: ""
-```
+The app uses outdoor **air temperature**, not “feels like,” to choose a baseline
+outfit. Wind, rain and UV add preparation advice rather than artificial
+temperature penalties. For example, the default at **16°C** is a long-sleeved
+body, trousers, socks and a removable lightweight cardigan.
 
-`parents_bedroom_entity` and the Météo-France vigilance entity are optional.
-Entity names are examples: select your actual HA entities. The night page shows
-both rooms, without averaging readings or guessing where the baby is sleeping.
+Indoor advice uses room sensors independently. At night, the app never guesses
+where the baby sleeps or chooses a sleep sack's insulation for you.
 
-Defaults: day 07:00–19:00 in Europe/Paris, HA refresh every 15 minutes, readings
-expire after 120 minutes. Configure those values for your sensors and routine.
-Indoor thresholds and outdoor thresholds are independent.
+## Documentation
 
-## Kindle setup
+- [Configuration, updates and migration](docs/setup.md)
+- [Kindle setup and network troubleshooting](docs/kindle.md)
+- [Clothing guidance, safety and evidence](docs/clothing-guidance.md)
+- [Development and architecture](docs/development.md)
+- [Changelog](CHANGELOG.md)
 
-See [Kindle setup](docs/kindle.md). Tested manually on a Basic 8th-generation
-KT3 with firmware 5.12.5, native 600 × 800 portrait PNGs. Exact compatibility with
-other devices is not established. Scheduling, networking and OTA protection are
-device-side concerns, not features that a server image can enable by itself.
+## Help and contributions
 
-## Development
+Found a bug or have an idea? [Open an issue](https://github.com/somaticbits/how-to-dress-baby/issues).
+For display or device problems, include the app version, Kindle model and steps
+to reproduce. Remove tokens, private configuration and household data before
+sharing logs or screenshots.
 
-```sh
-python3 -m venv .venv
-.venv/bin/pip install -r requirements-dev.txt
-PYTHONPATH=how_to_dress_baby .venv/bin/python -m unittest discover -s tests -v
-.venv/bin/ruff check .
-.venv/bin/ruff format --check .
-PYTHONPATH=how_to_dress_baby .venv/bin/python -m app --render-demo cache/day.png --page day
-```
+Contributions are welcome. See the [development guide](docs/development.md)
+for local setup and checks. Maintained by [somaticbits](https://github.com/somaticbits).
 
-For a standalone server, supply a private JSON configuration and `HA_TOKEN` in
-the process environment; do not commit either. HA OS needs no separate token.
-`/health` reports build version, freshness and the outdoor decision input/band,
-making it possible to explain an unexpected outfit rather than silently retune it.
+## License
 
-```text
-repository.yaml              HA store metadata
-how_to_dress_baby/
-  config.yaml                App options and version
-  Dockerfile                 Self-contained HA build context
-  app/                       Adapter, rules, renderer, HTTP service, local assets
-tests/                       Decisions, freshness, HTTP/cache and measured layout checks
-docs/                        Evidence boundaries and device setup
-kindle/                      Optional downloader overrides
-```
-
-## Design and engineering
-
-The constraints shape the product: a sleeping e-ink device, an always-on HA host,
-uncertain sensor freshness, and caregivers who need a readable starting point.
-The renderer separates **what to wear now** from **what to bring**; typography
-uses Fredoka headings and Atkinson Hyperlegible body text. Garment drawings are
-original Pillow geometry. Footer tests measure real font bounds and reserve
-space for a low-battery banner, rather than merely asserting PNG generation.
-
-Source builds have been checked on arm64. CI checks Python behavior and an amd64
-Docker build. armv7 and other Kindle firmware need target-device verification;
-do not interpret advertised architecture names as exhaustive certification.
-
-## Safety and privacy
-
-This is not medical advice, a physiological model, or an automated dressing
-system. Caregivers must check comfort, avoid overheating and adapt to actual
-conditions. No bulky coat goes under a car-seat harness, and carrier airways must
-remain clear—even though transport-specific UI has deliberately been removed.
-No automatic footmuff equivalents or sleep TOG tables are provided.
-
-The unauthenticated image endpoint is for a trusted LAN. Battery values are used
-per image request, not as a remote tracking feed. Keep credentials, real household
-configuration and device reports outside the repository.
-
-MIT for the application and original illustrations; see [third-party notices](THIRD_PARTY_NOTICES.md)
-for fonts and dependencies.
+[MIT](LICENSE) for the application and original illustrations. Bundled fonts and
+dependencies are covered in the [third-party notices](THIRD_PARTY_NOTICES.md).
