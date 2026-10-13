@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.3
+
+- Add a garment icon for the Home Assistant app store and app details.
+- Make this version history available in Home Assistant's app changelog view.
+
 ## 0.3.2
 
 - Add optional `baby_name` configuration and 50 personalised French greetings.

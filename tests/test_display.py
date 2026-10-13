@@ -201,7 +201,7 @@ class HTTPTests(unittest.TestCase):
         self.assertEqual(response.status, 200)
         value = json.loads(response.read())
         self.assertEqual(value["status"], "demo")
-        self.assertEqual(value["version"], "0.3.2")
+        self.assertEqual(value["version"], "0.3.3")
         self.assertEqual(value["decision"]["basis"], "air_temperature")
         self.assertEqual(value["decision"]["band"], "cool")
         self.assertNotIn("token", str(value))

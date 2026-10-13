@@ -71,6 +71,7 @@ All endpoints are unauthenticated and must stay on a trusted LAN.
 The repository builds the image on your Home Assistant host. Check the app store
 for updates and use Home Assistant's normal update flow. See the
 [changelog](../CHANGELOG.md) for changes.
+The same version history is also available in Home Assistant's app changelog view.
 
 ## Migrating from a local ZIP installation
 
